@@ -1,0 +1,3 @@
+%{
+  "cli_spinners": {:hex, :cli_spinners, "0.1.0", "08d89c6f1840a8927daed48c675ecb2f20c05c855dc2b4b58c2933d393d5e0c9", [:mix], [], "hexpm", "3b8ccad722e518309d8b92230960ca4775a761164514f78a89c4f04d5a25c97f"},
+}
