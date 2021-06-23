@@ -42,8 +42,7 @@ defmodule PhoenixReactify.MixProject do
   defp package() do
     [
       name: "phoenix_reactify",
-      files: ~w(lib deps test .formatter.exs mix.exs README* readme* LICENSE*
-                license* CHANGELOG* changelog* src),
+      files: ~w(lib deps test _build .formatter.exs mix.exs README*),
       licenses: ["MIT"],
       links: %{"GitHub" => "https://github.com/joojscript/phoenix_reactify"}
     ]
