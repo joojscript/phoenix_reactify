@@ -22,6 +22,7 @@ defmodule Mix.Tasks.Phx.Reactify do
     |> verify_prerequisites
     |> verify_if_is_phoenix_project
     |> generate_react_project
+    |> add_remount
 
     IO.inspect(opts, label: "Command Line Arguments")
   end
@@ -104,12 +105,60 @@ defmodule Mix.Tasks.Phx.Reactify do
     project_name = if opts[:project_name], do: opts[:project_name], else: "spa"
 
     File.mkdir("#{current_path}/#{project_name}")
-    File.cd("#{current_path}/assets/js/#{project_name}")
-    output = PhoenixReactify.Helpers.CreateReactApp.run(project_name, opts)
+    File.cd("#{current_path}/assets")
+    output = PhoenixReactify.Helpers.Npm.install_react(project_name, opts)
 
     if opts[:verbose] do
       IO.puts("#{output}")
     end
+
+    output = PhoenixReactify.Helpers.Npm.add_sample_files(project_name, opts)
+
+    if opts[:verbose] do
+      IO.puts("#{output}")
+    end
+
+    opts
+  end
+
+  defp add_remount(opts) do
+    {:ok, current_path} = File.cwd()
+    project_name = if opts[:project_name], do: opts[:project_name], else: "spa"
+    File.cd!("#{current_path}/#{project_name}")
+    PhoenixReactify.Helpers.Npm.install_remount(opts)
+    PhoenixReactify.Helpers.Npm.install_babel_presets(opts)
+    File.cd!("#{current_path}/#{project_name}/src")
+    File.touch!("#{current_path}/#{project_name}/src/entrypoint.js")
+
+    File.write!("#{current_path}/#{project_name}/src/entrypoint.js", """
+      import {define} from 'remount';
+
+      import App from './App';
+
+      define({ 'x-#{project_name}': App });
+    """)
+
+    decoded = Jason.decode!(File.read!("#{current_path}/../.babelrc"))
+
+    updatedBabelRc =
+      Map.put(decoded, "presets", Map.get(decoded, "presets", []) ++ ["@babel/preset-react"])
+
+    File.write!(
+      "#{current_path}/../.babelrc",
+      """
+        #{Jason.encode!(updatedBabelRc)}
+      """
+    )
+
+    File.write!(
+      "#{current_path}/app.js",
+      """
+        import './#{project_name}/src/entrypoint'
+      """,
+      [:append]
+    )
+
+    IO.inspect(current_path)
 
     opts
   end
