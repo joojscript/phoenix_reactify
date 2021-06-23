@@ -1,21 +1,23 @@
-# PhoenixReactify
+# Phoenix Reactify
 
-**TODO: Add description**
+**Phoenix Reactify** is an amazing **mix task** capable of adding a  simple React implementation to your fresh **phoenix projects**.
+
+### How does PhoenixReactify works?
+
+It uses the amazing [remount](https://github.com/rstacruz/remount) library to make your entire SPA App into a html tag, so that you can use into your phoenix application's templates
 
 ## Installation
 
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed
-by adding `phoenix_reactify` to your list of dependencies in `mix.exs`:
+The package is available in Hex, so just paste this into your **mix.exs** file:
 
 ```elixir
 def deps do
   [
+    # other dependencies
     {:phoenix_reactify, "~> 0.1.0"}
   ]
 end
 ```
 
-Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
-and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
-be found at [https://hexdocs.pm/phoenix_reactify](https://hexdocs.pm/phoenix_reactify).
-
+## License
+[MIT](https://choosealicense.com/licenses/mit/)
