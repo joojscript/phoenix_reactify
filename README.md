@@ -1,5 +1,5 @@
 <h1 align="center">
-  <img src="https://github.com/joojscript/phoenix_reactify/blob/master/.github/phoenix_reactify.png?raw=true" width="100" height="100" /> <br />
+  <img src="https://github.com/joojscript/phoenix_reactify/blob/master/.github/phoenix_reactify.png?raw=true" /> <br />
   Phoenix Reactify
 </h1>
 
