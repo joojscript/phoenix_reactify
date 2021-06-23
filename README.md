@@ -1,4 +1,8 @@
-# Phoenix Reactify
+<h1 align="center">
+  <img src="https://github.com/joojscript/phoenix_reactify/blob/master/.github/phoenix_reactify.png?raw=true" width="100" height="100" /> <br />
+  Phoenix Reactify
+</h1>
+
 
 **Phoenix Reactify** is an amazing **mix task** capable of adding a  simple React implementation to your fresh **phoenix projects**.
 
