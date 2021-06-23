@@ -23,5 +23,27 @@ def deps do
 end
 ```
 
+## Usage
+
+At this moment, Phoenix Reactify supports these options:
+
+- -p, --project: Specifies the React project name (Default to SPA).
+- -v, --verbose: Ensures verbose output.
+
+```sh
+mix phx.reactify --project <PROJECT-NAME> --verbose
+```
+
+After all set, you can embbed your spa, as <x-<YOUR-PROJECT-NAME> \> onto any of your .html.eex files.
+
+⚠ **WARNING**: be careful with route conflicts between the applications
+
+
+## ToDo
+  
+  - 🕐 Automatic route mapping (probably via macros or something like that).
+  - 🕐 Typescript support (deppends on babel).
+  - 🕐 Auto-Inject first generated tag (not trully necessary, but I think it would be more user-friendly).
+  
 ## License
 [MIT](https://choosealicense.com/licenses/mit/)
