@@ -29,6 +29,7 @@ At this moment, Phoenix Reactify supports these options:
 
 - -p, --project: Specifies the React project name (Default to SPA).
 - -v, --verbose: Ensures verbose output.
+- -t, --typescript: Enables Typescript support.
 
 ```sh
 mix phx.reactify --project <PROJECT-NAME> --verbose
