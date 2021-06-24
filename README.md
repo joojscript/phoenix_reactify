@@ -34,7 +34,7 @@ At this moment, Phoenix Reactify supports these options:
 mix phx.reactify --project <PROJECT-NAME> --verbose
 ```
 
-After all set, you can embbed your spa, as <x-<YOUR-PROJECT-NAME> \> onto any of your .html.eex files.
+After all set, you can embbed your spa, as <x-**YOUR-PROJECT-NAME** \> onto any of your .html.eex files.
 
 ⚠ **WARNING**: be careful with route conflicts between the applications
 
