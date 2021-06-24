@@ -7,6 +7,36 @@ defmodule(PhoenixReactify.Helpers.Npm) do
     version
   end
 
+  def run_npm_install!(opts) do
+    install_opts = ["i"]
+
+    conditions = [
+      {!opts[:verbose], "--silent"}
+    ]
+
+    install_opts =
+      install_opts ++
+        Enum.reduce(conditions, [], fn
+          {true, item}, list ->
+            [item | list]
+
+          _, list ->
+            list
+        end)
+
+    File.cd!("#{opts[:base_path]}/assets")
+
+    {output, _} = System.cmd("npm", install_opts)
+
+    File.cd!("#{opts[:base_path]}")
+
+    if opts[:verbose] do
+      IO.puts("#{output}")
+    end
+
+    output
+  end
+
   def install_remount!(opts \\ []) do
     install_opts = ["i", "remount"]
 
@@ -24,7 +54,11 @@ defmodule(PhoenixReactify.Helpers.Npm) do
             list
         end)
 
+    File.cd!("#{opts[:base_path]}/assets")
+
     {output, _} = System.cmd("npm", install_opts)
+
+    File.cd!("#{opts[:base_path]}")
 
     if opts[:verbose] do
       IO.puts("#{output}")
@@ -59,7 +93,11 @@ defmodule(PhoenixReactify.Helpers.Npm) do
             list
         end)
 
+    File.cd!("#{opts[:base_path]}/assets")
+
     {output, _} = System.cmd("npm", build_opts)
+
+    File.cd!("#{opts[:base_path]}")
 
     if opts[:verbose] do
       IO.puts("#{output}")
@@ -74,7 +112,6 @@ defmodule(PhoenixReactify.Helpers.Npm) do
       "--save-dev",
       "@babel/preset-typescript",
       "typescript",
-      "ts-loader@8.2.0",
       "@types/react"
     ]
 
@@ -119,11 +156,51 @@ defmodule(PhoenixReactify.Helpers.Npm) do
             list
         end)
 
+    File.cd!("#{opts[:base_path]}/assets")
+
+    {output, _} = System.cmd("npm", build_opts)
+
+    File.cd!("#{opts[:base_path]}")
+
+    if opts[:verbose] do
+      IO.puts("#{output}")
+    end
+
+    install_ts_loader!(opts)
+
+    output
+  end
+
+  defp install_ts_loader!(opts) do
+    File.cd!("#{opts[:base_path]}/assets")
+
+    build_opts = [
+      "i",
+      "--save-dev",
+      "ts-loader@8.2.0"
+    ]
+
+    conditions = [
+      {!opts[:verbose], "--silent"}
+    ]
+
+    build_opts =
+      build_opts ++
+        Enum.reduce(conditions, [], fn
+          {true, item}, list ->
+            [item | list]
+
+          _, list ->
+            list
+        end)
+
     {output, _} = System.cmd("npm", build_opts)
 
     if opts[:verbose] do
       IO.puts("#{output}")
     end
+
+    File.cd!("#{opts[:base_path]}")
 
     output
   end
@@ -176,7 +253,7 @@ defmodule(PhoenixReactify.Helpers.Npm) do
       import React from 'react';
 
       const App: React.FC = () => {
-        return <h1>hello world from ts</h1>;
+        return <h1>Hello World from TypeScript!</h1>;
       }
 
       export default App;

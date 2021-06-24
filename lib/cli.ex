@@ -30,6 +30,8 @@ defmodule Mix.Tasks.Phx.Reactify do
     |> verify_if_is_phoenix_project
     |> generate_react_project
     |> add_remount
+    |> add_tag_to_index_template
+    |> run_last_check
 
     IO.inspect(opts, label: "Command Line Arguments")
   end
@@ -42,14 +44,16 @@ defmodule Mix.Tasks.Phx.Reactify do
           Task.async(fn -> Helpers.Npm.available?() end),
           Task.async(fn -> Helpers.CreateReactApp.available?() end),
           Task.async(fn -> Helpers.Elixir.available?() end),
-          Task.async(fn -> Helpers.Erlang.available?() end)
+          Task.async(fn -> Helpers.Erlang.available?() end),
+          Task.async(fn -> Helpers.Phoenix.available?() end)
         ]
 
         [
           {_, {:ok, npm_version}},
           {_, {:ok, create_react_app_version}},
           {_, {:ok, elixir_version}},
-          {_, {:ok, erlang_version}}
+          {_, {:ok, erlang_version}},
+          {_, {:ok, phoenix_version}}
         ] = Task.yield_many(tasks, :infinity)
 
         if opts[:verbose] do
@@ -61,6 +65,8 @@ defmodule Mix.Tasks.Phx.Reactify do
             ELIXIR: #{elixir_version}
 
             ERLANG: #{erlang_version}
+
+            PHOENIX: #{phoenix_version}
           """)
         end
       end
@@ -102,50 +108,99 @@ defmodule Mix.Tasks.Phx.Reactify do
   end
 
   defp generate_react_project(opts) do
-    Helpers.Npm.install_react!(opts)
+    CliSpinners.spin_fun(
+      [text: "Installing React", done: "✅ React installed"],
+      fn ->
+        Helpers.Npm.install_react!(opts)
+      end
+    )
 
     if opts[:typescript] do
-      Helpers.Npm.install_typescript!(opts)
+      CliSpinners.spin_fun(
+        [text: "Intalling TypeScript", done: "✅ Typescript installed"],
+        fn ->
+          Helpers.Npm.install_typescript!(opts)
+        end
+      )
     end
 
-    Helpers.Npm.add_sample_files!(opts)
+    CliSpinners.spin_fun(
+      [text: "Adding sample files", done: "✅ Sample Files added"],
+      fn ->
+        Helpers.Npm.add_sample_files!(opts)
+      end
+    )
 
     opts
   end
 
   defp add_remount(opts) do
-    Helpers.Npm.install_remount!(opts)
+    CliSpinners.spin_fun(
+      [text: "Intalling Remount", done: "✅ Remount installed"],
+      fn ->
+        Helpers.Npm.install_remount!(opts)
+      end
+    )
 
-    if opts[:typescript] do
-      File.touch!("#{opts[:base_path]}/assets/js/#{opts[:project_name]}/src/entrypoint.ts")
+    CliSpinners.spin_fun(
+      [text: "Adding Entrypoints", done: "✅ Entrypoints Added"],
+      fn ->
+        if opts[:typescript] do
+          File.touch!("#{opts[:base_path]}/assets/js/#{opts[:project_name]}/src/entrypoint.ts")
 
-      File.write!("#{opts[:base_path]}/assets/js/#{opts[:project_name]}/src/entrypoint.ts", """
-        import {define} from 'remount';
+          File.write!(
+            "#{opts[:base_path]}/assets/js/#{opts[:project_name]}/src/entrypoint.ts",
+            """
+              import {define} from 'remount';
 
-        import App from './App';
+              import App from './App';
 
-        define({ 'x-#{opts[:project_name]}': App });
-      """)
-    else
-      File.touch!("#{opts[:base_path]}/assets/js/#{opts[:project_name]}/src/entrypoint.js")
+              define({ 'x-#{opts[:project_name]}': App });
+            """
+          )
+        else
+          File.touch!("#{opts[:base_path]}/assets/js/#{opts[:project_name]}/src/entrypoint.js")
 
-      File.write!("#{opts[:base_path]}/assets/js/#{opts[:project_name]}/src/entrypoint.js", """
-        import {define} from 'remount';
+          File.write!(
+            "#{opts[:base_path]}/assets/js/#{opts[:project_name]}/src/entrypoint.js",
+            """
+              import {define} from 'remount';
 
-        import App from './App';
+              import App from './App';
 
-        define({ 'x-#{opts[:project_name]}': App });
-      """)
-    end
+              define({ 'x-#{opts[:project_name]}': App });
+            """
+          )
+        end
 
-    File.write!(
-      "#{opts[:base_path]}/assets/js/app.js",
-      """
-        import './#{opts[:project_name]}/src/entrypoint'
-      """,
-      [:append]
+        File.write!(
+          "#{opts[:base_path]}/assets/js/app.js",
+          """
+            import './#{opts[:project_name]}/src/entrypoint'
+          """,
+          [:append]
+        )
+      end
     )
 
     opts
+  end
+
+  defp add_tag_to_index_template(opts) do
+    CliSpinners.spin_fun(
+      [text: "Adding first tag to templates/pages/index.html.eex", done: "✅ Tag Added"],
+      fn ->
+        Helpers.Phoenix.add_spa_tag_to_index_page_template!(opts)
+      end
+    )
+  end
+
+  defp run_last_check(opts) do
+    CliSpinners.spin_fun(
+      [text: "Running last check", done: "🚀 All set"],
+      fn ->
+        Helpers.Npm.run_npm_install!(opts)
+      end
+    )
   end
 end
