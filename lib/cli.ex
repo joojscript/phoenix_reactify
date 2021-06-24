@@ -16,7 +16,14 @@ defmodule Mix.Tasks.Phx.Reactify do
       aliases: [t: :typescript, v: :verbose, p: :project_name]
     ]
 
-    {opts, _, _} = OptionParser.parse(args, options)
+    {parsed_opts, _, _} = OptionParser.parse(args, options)
+
+    assigns =
+      if !parsed_opts[:project_name],
+        do: [project_name: "spa", base_path: File.cwd!()],
+        else: [base_path: File.cwd!()]
+
+    opts = parsed_opts ++ assigns
 
     opts
     |> verify_prerequisites
@@ -62,25 +69,21 @@ defmodule Mix.Tasks.Phx.Reactify do
     opts
   end
 
-  @doc """
-    Tries to verify if the current directory is a phoenix project.
-      - Not 100% effective
-      - Just as a preventive step.
-      - Assets mainly by the directory structure.
-  """
+  #  Tries to verify if the current directory is a phoenix project.
+  #    - Not 100% effective
+  #    - Just as a preventive step.
+  #    - Assets mainly by the directory structure.
   defp verify_if_is_phoenix_project(opts) do
-    {:ok, current_path} = File.cwd()
-
     CliSpinners.spin_fun(
       [text: "Verifying Phoenix Project", done: "✅ Phoenix Project Verified"],
       fn ->
         tasks = [
-          Task.async(fn -> File.exists?("#{current_path}/lib") end),
-          Task.async(fn -> File.exists?("#{current_path}/deps") end),
-          Task.async(fn -> File.exists?("#{current_path}/config") end),
-          Task.async(fn -> File.exists?("#{current_path}/assets") end),
-          Task.async(fn -> File.exists?("#{current_path}/priv") end),
-          Task.async(fn -> File.exists?("#{current_path}/test") end)
+          Task.async(fn -> File.exists?("#{opts[:base_path]}/lib") end),
+          Task.async(fn -> File.exists?("#{opts[:base_path]}/deps") end),
+          Task.async(fn -> File.exists?("#{opts[:base_path]}/config") end),
+          Task.async(fn -> File.exists?("#{opts[:base_path]}/assets") end),
+          Task.async(fn -> File.exists?("#{opts[:base_path]}/priv") end),
+          Task.async(fn -> File.exists?("#{opts[:base_path]}/test") end)
         ]
 
         results = Task.yield_many(tasks, :infinity)
@@ -99,66 +102,49 @@ defmodule Mix.Tasks.Phx.Reactify do
   end
 
   defp generate_react_project(opts) do
-    {:ok, current_path} = File.cwd()
-    File.cd("#{current_path}/assets/js")
-    {:ok, current_path} = File.cwd()
-    project_name = if opts[:project_name], do: opts[:project_name], else: "spa"
+    Helpers.Npm.install_react!(opts)
 
-    File.mkdir("#{current_path}/#{project_name}")
-    File.cd("#{current_path}/assets")
-    output = PhoenixReactify.Helpers.Npm.install_react(project_name, opts)
-
-    if opts[:verbose] do
-      IO.puts("#{output}")
+    if opts[:typescript] do
+      Helpers.Npm.install_typescript!(opts)
     end
 
-    output = PhoenixReactify.Helpers.Npm.add_sample_files(project_name, opts)
-
-    if opts[:verbose] do
-      IO.puts("#{output}")
-    end
+    Helpers.Npm.add_sample_files!(opts)
 
     opts
   end
 
   defp add_remount(opts) do
-    {:ok, current_path} = File.cwd()
-    project_name = if opts[:project_name], do: opts[:project_name], else: "spa"
-    File.cd!("#{current_path}/#{project_name}")
-    PhoenixReactify.Helpers.Npm.install_remount(opts)
-    PhoenixReactify.Helpers.Npm.install_babel_presets(opts)
-    File.cd!("#{current_path}/#{project_name}/src")
-    File.touch!("#{current_path}/#{project_name}/src/entrypoint.js")
+    Helpers.Npm.install_remount!(opts)
 
-    File.write!("#{current_path}/#{project_name}/src/entrypoint.js", """
-      import {define} from 'remount';
+    if opts[:typescript] do
+      File.touch!("#{opts[:base_path]}/assets/js/#{opts[:project_name]}/src/entrypoint.ts")
 
-      import App from './App';
+      File.write!("#{opts[:base_path]}/assets/js/#{opts[:project_name]}/src/entrypoint.ts", """
+        import {define} from 'remount';
 
-      define({ 'x-#{project_name}': App });
-    """)
+        import App from './App';
 
-    decoded = Jason.decode!(File.read!("#{current_path}/../.babelrc"))
+        define({ 'x-#{opts[:project_name]}': App });
+      """)
+    else
+      File.touch!("#{opts[:base_path]}/assets/js/#{opts[:project_name]}/src/entrypoint.js")
 
-    updatedBabelRc =
-      Map.put(decoded, "presets", Map.get(decoded, "presets", []) ++ ["@babel/preset-react"])
+      File.write!("#{opts[:base_path]}/assets/js/#{opts[:project_name]}/src/entrypoint.js", """
+        import {define} from 'remount';
 
-    File.write!(
-      "#{current_path}/../.babelrc",
-      """
-        #{Jason.encode!(updatedBabelRc)}
-      """
-    )
+        import App from './App';
+
+        define({ 'x-#{opts[:project_name]}': App });
+      """)
+    end
 
     File.write!(
-      "#{current_path}/app.js",
+      "#{opts[:base_path]}/assets/js/app.js",
       """
-        import './#{project_name}/src/entrypoint'
+        import './#{opts[:project_name]}/src/entrypoint'
       """,
       [:append]
     )
-
-    IO.inspect(current_path)
 
     opts
   end
