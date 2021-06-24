@@ -11,11 +11,6 @@ defmodule PhoenixReactify.Helpers.Phoenix do
     File.write!(
       "#{opts[:base_path]}/lib/#{String.downcase(app_name)}_web/templates/page/index.html.eex",
       """
-      <section class="phx-hero">
-        <h1><%= gettext "Welcome to %{name}!", name: "Phoenix" %></h1>
-        <p>Peace of mind from prototype to production</p>
-      </section>
-
       <x-#{opts[:project_name]} />
       """
     )

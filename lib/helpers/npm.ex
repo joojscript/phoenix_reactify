@@ -230,8 +230,12 @@ defmodule(PhoenixReactify.Helpers.Npm) do
     File.write!("#{project_path}/src/App.js", """
       import React from 'react';
 
-      function App() {
-        return <h1>Hello World!</h1>;
+      const App() {
+        return <div className="phx-hero">
+          <img src="https://github.com/joojscript/phoenix_reactify/blob/master/.github/phoenix_reactify.png?raw=true" alt="Phoenix Reactify Logo" />
+          <h1>Welcome to Phoenix Reactify!</h1>
+          <p>The message is being rendered by your new generated SPA!</p>
+        </div>;
       }
 
       export default App;
@@ -250,13 +254,17 @@ defmodule(PhoenixReactify.Helpers.Npm) do
     File.touch!("#{project_path}/src/App.tsx")
 
     File.write!("#{project_path}/src/App.tsx", """
-      import React from 'react';
+        import React from 'react';
 
-      const App: React.FC = () => {
-        return <h1>Hello World from TypeScript!</h1>;
-      }
+        const App: React.FC = () => {
+          return <div className="phx-hero">
+            <img src="https://github.com/joojscript/phoenix_reactify/blob/master/.github/phoenix_reactify.png?raw=true" alt="Phoenix Reactify Logo" />
+            <h1>Welcome to Phoenix Reactify!</h1>
+            <p>The message is being rendered by your new generated SPA!</p>
+          </div>;
+        }
 
-      export default App;
+        export default App;
     """)
 
     if opts[:verbose] do
