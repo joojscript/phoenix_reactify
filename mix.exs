@@ -4,7 +4,7 @@ defmodule PhoenixReactify.MixProject do
   def project do
     [
       app: :phoenix_reactify,
-      version: "0.0.1",
+      version: "0.0.2",
       elixir: "~> 1.12",
       escript: [main_module: PhoenixReactify.CLI],
       start_permanent: Mix.env() == :prod,

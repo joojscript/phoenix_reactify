@@ -33,7 +33,9 @@ defmodule Mix.Tasks.Phx.Reactify do
     |> add_tag_to_index_template
     |> run_last_check
 
-    IO.inspect(opts, label: "Command Line Arguments")
+    if opts[:verbose] do
+      IO.inspect(opts, label: "Command Line Arguments")
+    end
   end
 
   defp verify_prerequisites(opts) do
