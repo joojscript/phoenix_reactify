@@ -42,8 +42,8 @@ After all set, you can embbed your spa, as <x-<YOUR-PROJECT-NAME> \> onto any of
 ## ToDo
   
   - 🕐 Automatic route mapping (probably via macros or something like that).
-  - 🕐 Typescript support (deppends on babel).
-  - 🕐 Auto-Inject first generated tag (not trully necessary, but I think it would be more user-friendly).
+  - ✅ Typescript support (deppends on babel).
+  - ✅ Auto-Inject first generated tag (not trully necessary, but I think it would be more user-friendly).
   
 ## License
 [MIT](https://choosealicense.com/licenses/mit/)
