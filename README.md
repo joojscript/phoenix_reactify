@@ -32,7 +32,7 @@ At this moment, Phoenix Reactify supports these options:
 - -t, --typescript: Enables Typescript support.
 
 ```sh
-mix phx.reactify --project <PROJECT-NAME> --verbose
+mix phx.reactify --typescript --project <PROJECT-NAME> --verbose
 ```
 
 After all set, you can embbed your spa, as <x-**YOUR-PROJECT-NAME** \> onto any of your .html.eex files.
