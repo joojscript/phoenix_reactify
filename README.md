@@ -38,7 +38,7 @@ Feel free to remove it from the dependencies once you've set up your project ðŸ˜
  - Or, at every release I put a binary-compiled file altogether, you can download it [directly from the releases page](https://github.com/joojscript/phoenix_reactify/releases), and then, run it inside your fresh phoenix project.
 
 ```bash
-./phoenix_reactify
+$ ./phoenix_reactify
 ```
 
 ## Usage
