@@ -3,8 +3,17 @@
   Phoenix Reactify
 </h1>
 
+<h1 align="center">
+  <img src="https://img.shields.io/hexpm/v/phoenix_reactify?style=for-the-badge" />
+  <img src="https://img.shields.io/hexpm/l/phoenix_reactify?style=for-the-badge" />
+  <img src="https://img.shields.io/hexpm/dt/phoenix_reactify?style=for-the-badge" />
+  <img src="https://img.shields.io/github/issues/joojscript/phoenix_reactify?style=for-the-badge" />
+  <img src="https://img.shields.io/github/stars/joojscript/phoenix_reactify?style=for-the-badge" />
+</h1>
 
 **Phoenix Reactify** is an amazing **mix task** capable of adding a  simple React implementation to your fresh **phoenix projects**.
+
+⚠ **WARNING**: Currently, because of some webpack version related issues, this library its only compatible with **Phoenix 1.5.9** or any other that have webpack ~4.5 as peer-dependency.
 
 ### How does PhoenixReactify works?
 
