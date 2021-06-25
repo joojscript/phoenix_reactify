@@ -18,7 +18,7 @@ The package is available in Hex, so just paste this into your **mix.exs** file:
 def deps do
   [
     # other dependencies
-    {:phoenix_reactify, "~> 0.1.0"}
+    {:phoenix_reactify, "~> 0.0.2"}
   ]
 end
 ```
