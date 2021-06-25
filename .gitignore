@@ -24,3 +24,6 @@ phoenix_reactify-*.tar
 
 # Temporary files, for example, from tests.
 /tmp/
+
+# App Bundle
+phoenix_reactify
