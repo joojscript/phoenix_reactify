@@ -230,7 +230,7 @@ defmodule(PhoenixReactify.Helpers.Npm) do
     File.write!("#{project_path}/src/App.js", """
       import React from 'react';
 
-      const App() {
+      const App = () => {
         return <div className="phx-hero">
           <img src="https://github.com/joojscript/phoenix_reactify/blob/master/.github/phoenix_reactify.png?raw=true" alt="Phoenix Reactify Logo" />
           <h1>Welcome to Phoenix Reactify!</h1>
