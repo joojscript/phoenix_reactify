@@ -21,7 +21,8 @@ It uses the amazing [remount](https://github.com/rstacruz/remount) library to ma
 
 ## Installation
 
-The package is available in Hex, so just paste this into your **mix.exs** file:
+My first idea was to release it as a mix archive, so that you could use it in any project, once installed, just like ```mix phx.new``` command. But since mix archives cannot bundle dependencies (and this project has), I had to release it in two different ways:
+  - As a hex.pm package, that you can install like this, pasting this code into your **mix.exs** file:
 
 ```elixir
 def deps do
@@ -30,6 +31,14 @@ def deps do
     {:phoenix_reactify, "~> 0.0.2"}
   ]
 end
+```
+
+Feel free to remove it from the dependencies once you've set up your project 😄
+
+ - Or, at every release I put a binary-compiled file altogether, you can download it [directly from the releases page](https://github.com/joojscript/phoenix_reactify/releases), and then, run it inside your fresh phoenix project.
+
+```bash
+./phoenix_reactify
 ```
 
 ## Usage
