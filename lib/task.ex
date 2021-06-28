@@ -38,9 +38,9 @@ defmodule Mix.Tasks.Phx.Reactify do
     end
   end
 
-  def verify_prerequisites(opts) do
+  defp verify_prerequisites(opts) do
     CliSpinners.spin_fun(
-      [text: "Verifying Prerequisites\n", done: "✅ Prerequisites Verified\n"],
+      [text: "Verifying Prerequisites", done: "✅ Prerequisites Verified\n"],
       fn ->
         tasks = [
           Task.async(fn -> Helpers.Npm.available?() end),
@@ -54,12 +54,12 @@ defmodule Mix.Tasks.Phx.Reactify do
           case task do
             {:ok, version, descriptor} ->
               if opts[:verbose] do
-                IO.puts("✔ #{String.upcase(descriptor)} installed [#{version}]")
+                IO.puts("\n✔ #{String.upcase(descriptor)} installed [#{version}]")
               end
 
             {:error, :not_installed, descriptor} ->
               IO.puts("\n#{String.upcase(descriptor)} is not installed")
-              IO.puts("❌ Pre-Requisites not satisfied")
+              IO.puts("\n❌ Pre-Requisites not satisfied")
               System.halt(0)
           end
         end)

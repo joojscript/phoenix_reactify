@@ -1,6 +1,8 @@
 defmodule(PhoenixReactify.Helpers.Npm) do
   use PhoenixReactify.Helper
 
+  alias PhoenixReactify.Helpers
+
   def available? do
     try do
       {version, _} = System.cmd("npm", ["--version"])
