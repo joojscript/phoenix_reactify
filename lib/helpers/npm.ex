@@ -6,7 +6,7 @@ defmodule(PhoenixReactify.Helpers.Npm) do
   def available? do
     try do
       {version, _} = System.cmd("npm", ["--version"])
-      {:ok, String.trim(version), @descriptor}
+      compatible?(String.trim(version))
     rescue
       _ -> {:error, :not_installed, @descriptor}
     end

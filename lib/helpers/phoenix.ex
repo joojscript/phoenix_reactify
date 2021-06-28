@@ -6,7 +6,7 @@ defmodule PhoenixReactify.Helpers.Phoenix do
       {"Phoenix v" <> version, _} =
         System.cmd("mix", ["phx.new", "--version"], stderr_to_stdout: true)
 
-      {:ok, version, @descriptor}
+      compatible?(String.trim(version))
     rescue
       _ -> {:error, :not_installed, @descriptor}
     end

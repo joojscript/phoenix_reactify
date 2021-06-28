@@ -57,6 +57,16 @@ defmodule Mix.Tasks.Phx.Reactify do
                 IO.puts("\n✔ #{String.upcase(descriptor)} installed [#{version}]")
               end
 
+            {:error, :uncompatible, descriptor} ->
+              IO.puts("\n#{String.upcase(descriptor)} is not compatible")
+
+              IO.puts(
+                "\nCompatible versions include #{String.upcase(descriptor)} -> #{PhoenixReactify.Versions.get!(String.to_atom(String.downcase(descriptor)))}"
+              )
+
+              IO.puts("\n❌ Pre-Requisites not satisfied")
+              System.halt(0)
+
             {:error, :not_installed, descriptor} ->
               IO.puts("\n#{String.upcase(descriptor)} is not installed")
               IO.puts("\n❌ Pre-Requisites not satisfied")
