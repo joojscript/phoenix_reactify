@@ -4,7 +4,7 @@ defmodule PhoenixReactify.Helpers.Phoenix do
   def available? do
     try do
       {"Phoenix v" <> version, _} =
-        System.cmd("mix", ["phx.new", "--version", "--quiet"], stderr_to_stdout: true)
+        System.cmd("mix", ["phx.new", "--version"], stderr_to_stdout: true)
 
       {:ok, version, @descriptor}
     rescue

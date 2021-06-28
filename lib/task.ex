@@ -40,7 +40,7 @@ defmodule Mix.Tasks.Phx.Reactify do
 
   def verify_prerequisites(opts) do
     CliSpinners.spin_fun(
-      [text: "Verifying Prerequisites", done: "✅ Prerequisites Verified"],
+      [text: "Verifying Prerequisites\n", done: "✅ Prerequisites Verified\n"],
       fn ->
         tasks = [
           Task.async(fn -> Helpers.Npm.available?() end),
@@ -48,17 +48,6 @@ defmodule Mix.Tasks.Phx.Reactify do
           Task.async(fn -> Helpers.Erlang.available?() end),
           Task.async(fn -> Helpers.Phoenix.available?() end)
         ]
-
-        # [
-        #   {_, {:ok, npm_version}},
-        #   {_, {:ok, elixir_version}},
-        #   {_, {:ok, erlang_version}},
-        #   {_, {:ok, phoenix_version}}
-        # ] = Task.yield_many(tasks, :infinity)
-
-        # Enum.map(Task.yield_many(tasks, :infinity), fn {_, task} ->
-        #   IO.puts task
-        # end)
 
         Task.yield_many(tasks, :infinity)
         |> Enum.map(fn {_, {:ok, task}} ->
