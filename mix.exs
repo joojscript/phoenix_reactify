@@ -20,8 +20,7 @@ defmodule PhoenixReactify.MixProject do
 
   def application do
     [
-      extra_applications: [:logger],
-      included_applications: [:cli_spinners]
+      extra_applications: [:logger]
     ]
   end
 
