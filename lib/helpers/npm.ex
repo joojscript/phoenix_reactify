@@ -1,10 +1,13 @@
 defmodule(PhoenixReactify.Helpers.Npm) do
-  alias PhoenixReactify.Helpers
+  use PhoenixReactify.Helper
 
-  @spec available? :: {:ok, String.t()}
   def available? do
-    {version, _} = System.cmd("npm", ["--version"])
-    version
+    try do
+      {version, _} = System.cmd("npm", ["--version"])
+      {:ok, String.trim(version), @descriptor}
+    rescue
+      _ -> {:error, :not_installed, @descriptor}
+    end
   end
 
   def run_npm_install!(opts) do

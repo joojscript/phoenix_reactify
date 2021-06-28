@@ -1,4 +1,6 @@
 defmodule PhoenixReactify.Helpers.Babel do
+  use PhoenixReactify.Helper
+
   @doc """
     Add the specified entry to the .babelrc under the current path
   """

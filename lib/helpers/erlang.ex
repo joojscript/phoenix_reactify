@@ -1,5 +1,7 @@
 defmodule PhoenixReactify.Helpers.Erlang do
+  use PhoenixReactify.Helper
+
   def available? do
-    System.otp_release()
+    {:ok, System.otp_release(), @descriptor}
   end
 end

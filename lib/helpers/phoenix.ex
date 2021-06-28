@@ -1,7 +1,15 @@
 defmodule PhoenixReactify.Helpers.Phoenix do
+  use PhoenixReactify.Helper
+
   def available? do
-    {"Phoenix v" <> version, _} = System.cmd("mix", ["phx.new", "--version"])
-    version
+    try do
+      {"Phoenix v" <> version, _} =
+        System.cmd("mix", ["phx.new", "--version", "--quiet"], stderr_to_stdout: true)
+
+      {:ok, version, @descriptor}
+    rescue
+      _ -> {:error, :not_installed, @descriptor}
+    end
   end
 
   def add_spa_tag_to_index_page_template!(opts) do

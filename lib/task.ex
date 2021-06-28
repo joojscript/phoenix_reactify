@@ -38,39 +38,42 @@ defmodule Mix.Tasks.Phx.Reactify do
     end
   end
 
-  defp verify_prerequisites(opts) do
+  def verify_prerequisites(opts) do
     CliSpinners.spin_fun(
       [text: "Verifying Prerequisites", done: "✅ Prerequisites Verified"],
       fn ->
         tasks = [
           Task.async(fn -> Helpers.Npm.available?() end),
-          Task.async(fn -> Helpers.CreateReactApp.available?() end),
           Task.async(fn -> Helpers.Elixir.available?() end),
           Task.async(fn -> Helpers.Erlang.available?() end),
           Task.async(fn -> Helpers.Phoenix.available?() end)
         ]
 
-        [
-          {_, {:ok, npm_version}},
-          {_, {:ok, create_react_app_version}},
-          {_, {:ok, elixir_version}},
-          {_, {:ok, erlang_version}},
-          {_, {:ok, phoenix_version}}
-        ] = Task.yield_many(tasks, :infinity)
+        # [
+        #   {_, {:ok, npm_version}},
+        #   {_, {:ok, elixir_version}},
+        #   {_, {:ok, erlang_version}},
+        #   {_, {:ok, phoenix_version}}
+        # ] = Task.yield_many(tasks, :infinity)
 
-        if opts[:verbose] do
-          IO.puts("""
+        # Enum.map(Task.yield_many(tasks, :infinity), fn {_, task} ->
+        #   IO.puts task
+        # end)
 
+        Task.yield_many(tasks, :infinity)
+        |> Enum.map(fn {_, {:ok, task}} ->
+          case task do
+            {:ok, version, descriptor} ->
+              if opts[:verbose] do
+                IO.puts("✔ #{String.upcase(descriptor)} installed [#{version}]")
+              end
 
-            NPM: #{npm_version}
-            CREATE-REACT-APP: #{create_react_app_version}
-            ELIXIR: #{elixir_version}
-
-            ERLANG: #{erlang_version}
-
-            PHOENIX: #{phoenix_version}
-          """)
-        end
+            {:error, :not_installed, descriptor} ->
+              IO.puts("\n#{String.upcase(descriptor)} is not installed")
+              IO.puts("❌ Pre-Requisites not satisfied")
+              System.halt(0)
+          end
+        end)
       end
     )
 

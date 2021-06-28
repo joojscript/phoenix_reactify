@@ -1,5 +1,7 @@
 defmodule PhoenixReactify.Helpers.Elixir do
+  use PhoenixReactify.Helper
+
   def available? do
-    System.version()
+    {:ok, System.version(), @descriptor}
   end
 end
