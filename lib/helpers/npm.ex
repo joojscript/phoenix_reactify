@@ -12,7 +12,7 @@ defmodule(PhoenixReactify.Helpers.Npm) do
     end
   end
 
-  def run_npm_install!(opts) do
+  def run_npm_install!(opts \\ [verbose: false]) do
     install_opts = ["i"]
 
     conditions = [
@@ -227,7 +227,7 @@ defmodule(PhoenixReactify.Helpers.Npm) do
 
   defp create_react_js_files!(opts, project_path) do
     if opts[:verbose] do
-      IO.puts("Creating App.js under src directory...")
+      IO.write("\nCreating App.js under src directory...")
     end
 
     File.touch!("#{project_path}/src/App.js")
@@ -247,13 +247,13 @@ defmodule(PhoenixReactify.Helpers.Npm) do
     """)
 
     if opts[:verbose] do
-      IO.puts("Creted App.js under src directory.")
+      IO.write("\r✅ Created App.js under src directory.")
     end
   end
 
   defp create_react_ts_files!(opts, project_path) do
     if opts[:verbose] do
-      IO.puts("Creating App.tsx under src directory...")
+      IO.write("\nCreating App.tsx under src directory...")
     end
 
     File.touch!("#{project_path}/src/App.tsx")
@@ -273,7 +273,7 @@ defmodule(PhoenixReactify.Helpers.Npm) do
     """)
 
     if opts[:verbose] do
-      IO.puts("Creted App.tsx under src directory.")
+      IO.puts("\r✅ Created App.tsx under src directory.")
     end
   end
 end

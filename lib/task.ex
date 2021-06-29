@@ -39,42 +39,41 @@ defmodule Mix.Tasks.Phx.Reactify do
   end
 
   defp verify_prerequisites(opts) do
-    CliSpinners.spin_fun(
-      [text: "Verifying Prerequisites", done: "✅ Prerequisites Verified\n"],
-      fn ->
-        tasks = [
-          Task.async(fn -> Helpers.Npm.available?() end),
-          Task.async(fn -> Helpers.Elixir.available?() end),
-          Task.async(fn -> Helpers.Erlang.available?() end),
-          Task.async(fn -> Helpers.Phoenix.available?() end)
-        ]
+    IO.write("Verifying Prerequisites...")
 
-        Task.yield_many(tasks, :infinity)
-        |> Enum.map(fn {_, {:ok, task}} ->
-          case task do
-            {:ok, version, descriptor} ->
-              if opts[:verbose] do
-                IO.puts("\n✔ #{String.upcase(descriptor)} installed [#{version}]")
-              end
+    tasks = [
+      Task.async(fn -> Helpers.Npm.available?() end),
+      Task.async(fn -> Helpers.Elixir.available?() end),
+      Task.async(fn -> Helpers.Erlang.available?() end),
+      Task.async(fn -> Helpers.Phoenix.available?() end)
+    ]
 
-            {:error, :uncompatible, descriptor} ->
-              IO.puts("\n#{String.upcase(descriptor)} is not compatible")
-
-              IO.puts(
-                "\nCompatible versions include #{String.upcase(descriptor)} -> #{PhoenixReactify.Versions.get!(String.to_atom(String.downcase(descriptor)))}"
-              )
-
-              IO.puts("\n❌ Pre-Requisites not satisfied")
-              System.halt(0)
-
-            {:error, :not_installed, descriptor} ->
-              IO.puts("\n#{String.upcase(descriptor)} is not installed")
-              IO.puts("\n❌ Pre-Requisites not satisfied")
-              System.halt(0)
+    Task.yield_many(tasks, :infinity)
+    |> Enum.map(fn {_, {:ok, task}} ->
+      case task do
+        {:ok, version, descriptor} ->
+          if opts[:verbose] do
+            IO.puts("\n✔ #{String.upcase(descriptor)} installed [#{version}]")
           end
-        end)
+
+        {:error, :uncompatible, descriptor} ->
+          IO.puts("\n#{String.upcase(descriptor)} is not compatible")
+
+          IO.puts(
+            "\nCompatible versions include #{String.upcase(descriptor)} -> #{PhoenixReactify.Versions.get!(String.to_atom(String.downcase(descriptor)))}"
+          )
+
+          IO.puts("\n❌ Pre-Requisites not satisfied")
+          System.halt(0)
+
+        {:error, :not_installed, descriptor} ->
+          IO.puts("\n#{String.upcase(descriptor)} is not installed")
+          IO.puts("\n❌ Pre-Requisites not satisfied")
+          System.halt(0)
       end
-    )
+    end)
+
+    IO.write("\r✅ Prerequisites Verified\n")
 
     opts
   end
@@ -84,127 +83,111 @@ defmodule Mix.Tasks.Phx.Reactify do
   #    - Just as a preventive step.
   #    - Assets mainly by the directory structure.
   defp verify_if_is_phoenix_project(opts) do
-    CliSpinners.spin_fun(
-      [text: "Verifying Phoenix Project", done: "✅ Phoenix Project Verified"],
-      fn ->
-        tasks = [
-          Task.async(fn -> File.exists?("#{opts[:base_path]}/lib") end),
-          Task.async(fn -> File.exists?("#{opts[:base_path]}/deps") end),
-          Task.async(fn -> File.exists?("#{opts[:base_path]}/config") end),
-          Task.async(fn -> File.exists?("#{opts[:base_path]}/assets") end),
-          Task.async(fn -> File.exists?("#{opts[:base_path]}/priv") end),
-          Task.async(fn -> File.exists?("#{opts[:base_path]}/test") end)
-        ]
+    IO.write("Verifying Phoenix Project...")
 
-        results = Task.yield_many(tasks, :infinity)
+    tasks = [
+      Task.async(fn -> File.exists?("#{opts[:base_path]}/lib") end),
+      Task.async(fn -> File.exists?("#{opts[:base_path]}/deps") end),
+      Task.async(fn -> File.exists?("#{opts[:base_path]}/config") end),
+      Task.async(fn -> File.exists?("#{opts[:base_path]}/assets") end),
+      Task.async(fn -> File.exists?("#{opts[:base_path]}/priv") end),
+      Task.async(fn -> File.exists?("#{opts[:base_path]}/test") end)
+    ]
 
-        Enum.each(results, fn task ->
-          {_task, {:ok, exists}} = task
+    results = Task.yield_many(tasks, :infinity)
 
-          if !exists do
-            raise(RuntimeError, "Is not a Phoenix Project")
-          end
-        end)
+    Enum.each(results, fn task ->
+      {_task, {:ok, exists}} = task
+
+      if !exists do
+        raise(RuntimeError, "Is not a Phoenix Project")
       end
-    )
+    end)
+
+    IO.write("\r✅ Phoenix Project Verified\n")
 
     opts
   end
 
   defp generate_react_project(opts) do
-    CliSpinners.spin_fun(
-      [text: "Installing React", done: "✅ React installed"],
-      fn ->
-        Helpers.Npm.install_react!(opts)
-      end
-    )
+    IO.write("Intalling React...")
+    Helpers.Npm.install_react!(opts)
+    IO.write("\r✅ React installed\n")
 
     if opts[:typescript] do
-      CliSpinners.spin_fun(
-        [text: "Intalling TypeScript", done: "✅ Typescript installed"],
-        fn ->
-          Helpers.Npm.install_typescript!(opts)
-        end
-      )
+      IO.write("Intalling TypeScript...")
+      Helpers.Npm.install_typescript!(opts)
+      IO.write("\r✅ Typescript installed\n")
     end
 
-    CliSpinners.spin_fun(
-      [text: "Adding sample files", done: "✅ Sample Files added"],
-      fn ->
-        Helpers.Npm.add_sample_files!(opts)
-      end
-    )
+    IO.write("Adding sample files...")
+    Helpers.Npm.add_sample_files!(opts)
+    IO.write("\r✅ Sample Files added\n")
 
     opts
   end
 
   defp add_remount(opts) do
-    CliSpinners.spin_fun(
-      [text: "Intalling Remount", done: "✅ Remount installed"],
-      fn ->
-        Helpers.Npm.install_remount!(opts)
-      end
+    IO.write("Installing Remount...")
+    Helpers.Npm.install_remount!(opts)
+    IO.write("\r✅ Remount installed\n")
+
+    IO.write("Adding entrypoints...")
+
+    if opts[:typescript] do
+      File.touch!("#{opts[:base_path]}/assets/js/#{opts[:project_name]}/src/entrypoint.ts")
+
+      File.write!(
+        "#{opts[:base_path]}/assets/js/#{opts[:project_name]}/src/entrypoint.ts",
+        """
+          import {define} from 'remount';
+
+          import App from './App';
+
+          define({ 'x-#{opts[:project_name]}': App });
+        """
+      )
+    else
+      File.touch!("#{opts[:base_path]}/assets/js/#{opts[:project_name]}/src/entrypoint.js")
+
+      File.write!(
+        "#{opts[:base_path]}/assets/js/#{opts[:project_name]}/src/entrypoint.js",
+        """
+          import {define} from 'remount';
+
+          import App from './App';
+
+          define({ 'x-#{opts[:project_name]}': App });
+        """
+      )
+    end
+
+    File.write!(
+      "#{opts[:base_path]}/assets/js/app.js",
+      """
+        import './#{opts[:project_name]}/src/entrypoint'
+      """,
+      [:append]
     )
 
-    CliSpinners.spin_fun(
-      [text: "Adding Entrypoints", done: "✅ Entrypoints Added"],
-      fn ->
-        if opts[:typescript] do
-          File.touch!("#{opts[:base_path]}/assets/js/#{opts[:project_name]}/src/entrypoint.ts")
-
-          File.write!(
-            "#{opts[:base_path]}/assets/js/#{opts[:project_name]}/src/entrypoint.ts",
-            """
-              import {define} from 'remount';
-
-              import App from './App';
-
-              define({ 'x-#{opts[:project_name]}': App });
-            """
-          )
-        else
-          File.touch!("#{opts[:base_path]}/assets/js/#{opts[:project_name]}/src/entrypoint.js")
-
-          File.write!(
-            "#{opts[:base_path]}/assets/js/#{opts[:project_name]}/src/entrypoint.js",
-            """
-              import {define} from 'remount';
-
-              import App from './App';
-
-              define({ 'x-#{opts[:project_name]}': App });
-            """
-          )
-        end
-
-        File.write!(
-          "#{opts[:base_path]}/assets/js/app.js",
-          """
-            import './#{opts[:project_name]}/src/entrypoint'
-          """,
-          [:append]
-        )
-      end
-    )
+    IO.write("\r✅ Entrypoints Added\n")
 
     opts
   end
 
   defp add_tag_to_index_template(opts) do
-    CliSpinners.spin_fun(
-      [text: "Adding first tag to templates/pages/index.html.eex", done: "✅ Tag Added"],
-      fn ->
-        Helpers.Phoenix.add_spa_tag_to_index_page_template!(opts)
-      end
-    )
+    IO.write("Adding first tag to templates/pages/index.html.eex...")
+    Helpers.Phoenix.add_spa_tag_to_index_page_template!(opts)
+    IO.write("\r✅ Tag Added\n")
+
+    opts
   end
 
   defp run_last_check(opts) do
-    CliSpinners.spin_fun(
-      [text: "Running last check", done: "🚀 All set"],
-      fn ->
-        Helpers.Npm.run_npm_install!(opts)
-      end
-    )
+    IO.write("Running last check...")
+    Helpers.Npm.run_npm_install!(opts)
+    IO.write("\r🚀 All set\n")
+
+    opts
   end
 end
