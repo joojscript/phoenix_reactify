@@ -1,5 +1,5 @@
 defmodule PhoenixReactify.CLI do
   def main(args \\ []) do
-    Mix.Tasks.Phx.Reactify.run(args)
+    PhoenixReactify.main(args)
   end
 end
