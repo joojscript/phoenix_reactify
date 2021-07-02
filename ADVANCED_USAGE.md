@@ -56,4 +56,42 @@ import "phoenix_html"
 import './intra/src/entrypoint'
 ```
 
-Now we're all done! Hope it helps!
+Now we're all done!
+
+## Passing parameters from Phoenix to React
+
+By using the parameter feature of remount, we can pass some parameters to the tags generated, I higly encourage you to read [the remount documentation](https://github.com/rstacruz/remount/blob/master/README.md) so you can have a better understanding of what I'm talking about, but in order to get you started right in the spot, it suports two ways of passing parameters:
+
+1. Named parameters (need to be registered together your entrypoint).
+2. **props-json** approach.
+
+### Named parameters
+
+From remount docs, we can define named attirbutes like this:
+
+```js
+define({
+  'x-spa': {
+    component: App,
+    attributes: ['value', 'label']
+  }
+  'x-intra': {
+    component: Intra,
+    attributes: ['title', 'body']
+  }
+})
+```
+
+- **Pro**: more readable.
+- **Con**: it always converts anything that gets passed into strings.
+
+### props-json approach
+
+Also from remount docs:
+
+```html
+<x-intra props-json='{"color":"red", "hidden": false, "number": 0}'></x-intra>
+```
+
+- **Pro**: supports all kinds of data.
+- **Cons**: less readable, and a bit silly to write.
