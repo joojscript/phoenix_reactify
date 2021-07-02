@@ -54,9 +54,10 @@ At this moment, Phoenix Reactify supports these options:
 mix phx.reactify --typescript --project <PROJECT-NAME> --verbose
 ```
 
-By default, the library already puts the first entrypoint tag to the default elixir first page template (lib/\<project-name>\_web/templates/page/index.html.eex). But you can always create new tags and even multiple SPAs! If you want this kind of behaviour, please refer to [Advanced Usage](http://github.com/joojscript/phoenix_reactify/ADVANCED_USAGE.md)
+By default, the library already puts the first entrypoint tag to the default elixir first page template (lib/\<project-name>\_web/templates/page/index.html.eex). But you can always create new tags and even multiple SPAs! If you want this kind of behaviour, please refer to [Advanced Usage](https://github.com/joojscript/phoenix_reactify/blob/master/ADVANCED_USAGE.md)
 
 With your default first tag set, just fire up localhost:4000 (default phoenix server port), and you should see that, if everything gone well:
+
 ![PhoenixReactfyMainScreen](https://github.com/joojscript/phoenix_reactify/blob/master/.github/mainscreen.png?raw=true)
 
 ⚠ **WARNING**: be careful with route conflicts between the applications
