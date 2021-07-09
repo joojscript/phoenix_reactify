@@ -6,10 +6,13 @@ defmodule PhoenixReactify do
   alias PhoenixReactify.Helpers
 
   def main(args) do
-    IO.inspect(__ENV__)
-
     options = [
-      switches: [typescript: :boolean, verbose: :boolean, project_name: :string],
+      switches: [
+        typescript: :boolean,
+        verbose: :boolean,
+        project_name: :string,
+        npm_force_install: :boolean
+      ],
       aliases: [t: :typescript, v: :verbose, p: :project_name]
     ]
 

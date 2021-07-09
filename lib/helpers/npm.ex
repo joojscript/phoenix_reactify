@@ -12,11 +12,12 @@ defmodule(PhoenixReactify.Helpers.Npm) do
     end
   end
 
-  def run_npm_install!(opts \\ [verbose: false]) do
+  def run_npm_install!(opts \\ [verbose: false, npm_force_install: false]) do
     install_opts = ["i"]
 
     conditions = [
-      {!opts[:verbose], "--silent"}
+      {!opts[:verbose], "--silent"},
+      {opts[:npm_force_install], "--force"}
     ]
 
     install_opts =
@@ -42,11 +43,12 @@ defmodule(PhoenixReactify.Helpers.Npm) do
     output
   end
 
-  def install_remount!(opts \\ []) do
+  def install_remount!(opts \\ [verbose: false, npm_force_install: false]) do
     install_opts = ["i", "remount"]
 
     conditions = [
-      {!opts[:verbose], "--silent"}
+      {!opts[:verbose], "--silent"},
+      {opts[:npm_force_install], "--force"}
     ]
 
     install_opts =
@@ -72,7 +74,7 @@ defmodule(PhoenixReactify.Helpers.Npm) do
     output
   end
 
-  def install_react!(opts \\ [typescript: false, verbose: false]) do
+  def install_react!(opts \\ [typescript: false, verbose: false, npm_force_install: false]) do
     build_opts = [
       "i",
       "react",
@@ -85,7 +87,8 @@ defmodule(PhoenixReactify.Helpers.Npm) do
     Helpers.Babel.add_entry_to_babelrc(opts[:base_path], "@babel/preset-react")
 
     conditions = [
-      {!opts[:verbose], "--silent"}
+      {!opts[:verbose], "--silent"},
+      {opts[:npm_force_install], "--force"}
     ]
 
     build_opts =
@@ -111,7 +114,7 @@ defmodule(PhoenixReactify.Helpers.Npm) do
     output
   end
 
-  def install_typescript!(opts \\ [typescript: true, verbose: false]) do
+  def install_typescript!(opts \\ [typescript: true, verbose: false, npm_force_install: false]) do
     build_opts = [
       "i",
       "--save-dev",
@@ -121,7 +124,8 @@ defmodule(PhoenixReactify.Helpers.Npm) do
     ]
 
     conditions = [
-      {!opts[:verbose], "--silent"}
+      {!opts[:verbose], "--silent"},
+      {opts[:npm_force_install], "--force"}
     ]
 
     Helpers.Babel.add_entry_to_babelrc(opts[:base_path], "@babel/preset-typescript")
@@ -176,7 +180,7 @@ defmodule(PhoenixReactify.Helpers.Npm) do
     output
   end
 
-  defp install_ts_loader!(opts) do
+  defp install_ts_loader!(opts \\ [verbose: false, npm_force_install: false]) do
     File.cd!("#{opts[:base_path]}/assets")
 
     build_opts = [
@@ -186,7 +190,8 @@ defmodule(PhoenixReactify.Helpers.Npm) do
     ]
 
     conditions = [
-      {!opts[:verbose], "--silent"}
+      {!opts[:verbose], "--silent"},
+      {opts[:npm_force_install], "--force"}
     ]
 
     build_opts =
