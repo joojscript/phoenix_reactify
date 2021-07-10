@@ -29,7 +29,7 @@ My first idea was to release it as a mix archive, so that you could use it in an
 def deps do
   [
     # other dependencies
-    {:phoenix_reactify, "~> 0.0.3"}
+    {:phoenix_reactify, "~> 0.0.4"}
   ]
 end
 ```
