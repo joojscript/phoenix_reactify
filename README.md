@@ -66,6 +66,7 @@ With your default first tag set, just fire up localhost:4000 (default phoenix se
 ## ToDo
 
 - 🕐 Automatic route mapping (probably via macros or something like that).
+- 🕐 Bundle dependencies together to distribute as mix archive.
 - ✅ Typescript support (deppends on babel).
 - ✅ Auto-Inject first generated tag (not trully necessary, but I think it would be more user-friendly).
 
