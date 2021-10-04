@@ -3,8 +3,13 @@ defmodule PhoenixReactify.Helpers.Phoenix do
 
   def available? do
     try do
-      {"Phoenix v" <> version, _} =
-        System.cmd("mix", ["phx.new", "--version"], stderr_to_stdout: true)
+      {raw, _} = System.cmd("mix", ["phx.new", "--version"], stderr_to_stdout: true)
+
+      [version] =
+        Regex.run(
+          ~r/\d.?\d.?\d/,
+          raw
+        )
 
       compatible?(String.trim(version))
     rescue
