@@ -180,7 +180,7 @@ defmodule(PhoenixReactify.Helpers.Npm) do
     output
   end
 
-  defp install_ts_loader!(opts \\ [verbose: false, npm_force_install: false]) do
+  defp install_ts_loader!(opts) do
     File.cd!("#{opts[:base_path]}/assets")
 
     build_opts = [
