@@ -18,16 +18,19 @@ defmodule PhoenixReactify.Helpers.Phoenix do
   end
 
   def add_spa_tag_to_index_page_template!(opts) do
-    line = "#{opts[:base_path]}/mix.exs" |> File.stream!() |> Enum.take(1)
-    [app_name | _] = Regex.run(~r/(\S+)(?=\.)/, to_string(line))
-
-    File.write!(
-      "#{opts[:base_path]}/lib/#{String.downcase(app_name)}_web/templates/page/index.html.eex",
-      """
-      <x-#{opts[:project_name]} />
-      """
-    )
-
-    opts
+    try do
+      [web_dir] = Path.wildcard("#{opts[:base_path]}/lib/*_web")
+      template_dir = "#{web_dir}/templates/page/"
+      [template] = Path.wildcard("#{template_dir}/index.html.*eex")
+      File.write!(
+        template,
+        """
+        <x-#{opts[:project_name]} />
+        """
+      )
+      opts
+    rescue
+      _ -> {:error, :not_installed, @descriptor}
+    end
   end
 end
